@@ -10,7 +10,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,13 +25,18 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.bluetoothapp.databinding.ActivityMainBinding;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
      private BluetoothManager bluetoothManager;
      private BluetoothAdapter bluetoothAdapter;
-
     private ActivityMainBinding binding;
+
+    private ListView listView;
+    private ArrayAdapter<String> adapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +48,15 @@ public class MainActivity extends AppCompatActivity {
         Button enableDisableBleBtn = findViewById(R.id.enableDisableBleBtn);
         Button findDevices = findViewById(R.id.findDevices);
 
+        this.listView = findViewById(R.id.listView);
+
+
+
+
         findDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanForDevices();
+                handleShowDevices();
             }
         });
 
@@ -56,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
@@ -70,6 +83,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void handleShowDevices(){
+        try {
+            ArrayList<String> availableDevices =  scanForDevices();
+            adapter  = new ArrayAdapter<String>(this, R.layout.row , availableDevices);
+
+            if(this.listView != null){
+                this.listView.setAdapter(adapter);
+                Log.d("message", "not null");
+            }
+
+        }catch(Exception e){
+           Log.d("message","err", e);
+
+        }
+
+    }
 
 
     private void enableDisableBle(){
@@ -86,23 +115,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void scanForDevices(){
+    private ArrayList<String> scanForDevices(){
+        ArrayList<String> listOfDevices = new ArrayList<String>();
+
         try{
             Set<BluetoothDevice> pairedDevices = this.bluetoothAdapter.getBondedDevices();
-
             if(pairedDevices.size() > 0){
                 for(BluetoothDevice device : pairedDevices){
                     String deviceName = device.getName();
                     String deviceAdress = device.getAddress();
-
-                    Log.d("device", deviceName);
+                    listOfDevices.add(deviceName);
                 }
             }
 
+            return listOfDevices;
         }catch(SecurityException e){
                 Log.d("error", "Security exception");
         }
-
+        return listOfDevices;
     }
-
 }
+
+
+

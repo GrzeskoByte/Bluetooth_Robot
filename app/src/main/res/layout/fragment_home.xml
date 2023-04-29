@@ -6,23 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <Button
-        android:id="@+id/enableDisableBleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="on/off"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:orientation="vertical"
+        >
 
-    <Button
-        android:id="@+id/findDevices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan for devices"
-        app:layout_constraintBottom_toTopOf="@+id/enableDisableBleBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ListView
+            android:id="@+id/listView"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"/>
+
+        <Button
+            android:id="@+id/findDevices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scan for devices" />
+
+        <Button
+            android:id="@+id/enableDisableBleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="on/off" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
